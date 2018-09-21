@@ -27,6 +27,8 @@ CNN model for learning-based gesture recognition.
 Debugging tool.
 ### utils.py
 Utility classes and functions.
+
+
 Reference
 ----------
 [Google Cloud API](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/speech/cloud-client/transcribe_streaming_mic.py)

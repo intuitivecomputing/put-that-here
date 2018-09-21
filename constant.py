@@ -1,0 +1,16 @@
+import numpy as np
+
+Green_low = np.array([62,0,0])
+Green_high = np.array([86,255,255])
+Hand_low = np.array([112,0,0])
+Hand_high = np.array([159,255,255])
+Skin_low = np.array([4,0,0])
+Skin_high = np.array([20,255,255])
+Blue_low = np.array([95,0,0])
+Blue_high = np.array([101,255,255])
+Red_low = np.array([172,62,0])
+Red_high = np.array([180,255,255])
+Top_low = np.array([0,0,187])
+Top_high = np.array([180,255,255])
+Yellow_low = np.array([21,0,0])
+Yellow_high = np.array([45,255,255])

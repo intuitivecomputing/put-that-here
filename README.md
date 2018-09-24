@@ -1,32 +1,42 @@
 Put That Here: Situated Multimodal Instruction of Robot Pick-and-Place Tasks
 ==========================================================
-### Author: Ji Han, Ze Li, Chien-ming Huang
+### Author: Ji Han, Ze Li, Chien-Ming Huang
 ### E-mail: jhan53@jhu.edu
 ****
-Description
+Prerequisite
 ------
-### constant.py
-contain HSV threshold for color-based segmentation.
-### hand_tracking.py
-Contour-based hand detection and feature extraction.
-### hand_tracking_node.py
-ROS node for gesture recognition. The main function is the core logic of this project.
-### control_group.py
-ROS node for Wizard-of-Oz method.
-### pick_ik.py
-ROS node for coordinate transformation and Inverse Kinematic manipulation.
-### projector.py
-ROS node for signal feedback, in OpenCV format.
-### Intro.py
-Natural behavior signal guidance.
-### Speech_node.py
-ROS node for speech recognition.
-### model
-CNN model for learning-based gesture recognition.
-### fake_publisher.py
-Debugging tool.
-### utils.py
-Utility classes and functions.
+1. Purple gloves for both hands
+2. Green tablecloth
+3. Top-Down Webcam
+4. UR5
+5. ROS Kinetics enviroment
+6. OpenCV
+
+Installation
+------------
+    git clone https://github.com/intuitivecomputing/put-that-here.git
+
+[UR5 Driver](https://github.com/intuitivecomputing/icl_phri_ur5)
+
+[Google Speech-to-Text](https://cloud.google.com/speech-to-text/docs/reference/libraries)
+
+
+Usage
+----------
+This project supports multimodal robot instruction with four kinds of gestures and various verbal commands.
+![GitHub Logo](/image/img1.png)
+### Gesture-Recognition
+    rosrun put_that_here hand_tracking_node.py
+### Speech-Recognition
+    rosrun put_that_here Speech_node.py
+### Autonomous Manipulation
+    rosrun put_that_here pick_ik.py
+### Wizard-of-Oz Manipulation
+    rosrun put_that_here control_group.py
+### Signaling Feedback
+This node should be run on another computer that connected to the projector.
+    
+    rosrun put_that_here projector.py
 
 
 Reference

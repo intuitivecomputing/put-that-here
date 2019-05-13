@@ -19,13 +19,10 @@ class hand_tracking():
         frame = image.copy()
         self.radius_thresh = 0.05
         self.result = []
-        #_, frame = cap.read()
-        #frame = self.warp(frame)
         blur = cv2.blur(frame,(5,5))
         hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
         kernal = np.ones((7 ,7), "uint8")
         mask = cv2.inRange(hsv, Hand_low, Hand_high)
-        #mask = cv2.dilate(mask, kernal)
         mask2 = cv2.GaussianBlur(mask,(11,11),-1)  
         kernel_square = np.ones((11,11),np.uint8)
         kernel_ellipse= cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
@@ -39,9 +36,6 @@ class hand_tracking():
 
         median = cv2.medianBlur(dilation2,5)
         _,thresh = cv2.threshold(median,127,255,0)
-        # cv2.imshow('thresh', thresh)
-        
-        # cv2.imshow('dgs', mask)
         self.mask = mask.copy()
         _, contours, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)  
         self.hand_cnt = [] 
@@ -72,11 +66,8 @@ class hand_tracking():
                 
         cv2.imshow('hand_tracking',frame) 
     def get_result(self):
-        #self.filter()
-        # return (self.only_point, self.angle), (self.rl_point, self.twoangle), self.center
         if len(self.result) == 2:
             if self.result[0][0][0] > self.result[1][0][0]:
-                #self.result = [self.result[1], self.result[0]]
                 self.result = self.result[::-1]
         return self.result
     
@@ -119,42 +110,12 @@ class hand_tracking():
         [vx,vy,x,y] = cv2.fitLine(cont, cv2.DIST_L2,0,0.01,0.01)
         cv2.line(frame_in,(x - vx * 70, y - vy * 70),(x,y),(0,255,0),2)
         endpoint1 = (x - vx * 70, y - vy * 70)
-        # lefty = int((-x*vy/vx) + y)
-        # righty = int(((cols-x)*vy/vx)+y)
-        
-        #cv2.line(frame_in,(cols-1,righty),(0,lefty),(0,255,0),2)
-        # ec = cv2.fitEllipse(cont)
-        # (x,y),(MA,ma),angle = ec
-        # cv2.ellipse(frame_in,ec,(0, 0, 255),1)
-        # print(angle)
-        # if angle != 0:
-        #     if angle > 90:
-        #         k = math.tan(math.radians(90 + angle))
-        #         x1 = center[0] - 1/k
-        #         y1 = center[1] - 1
-        #     elif angle>0 and angle < 90:
-        #         #print("hg")
-        #         k = math.tan(math.radians(90 -angle))
-        #         x1 = center[0] - 1/k
-        #         y1 = center[1] - 1
-        # else:
-        #     x1 = center[0]
-        #     y1 = center[1] - 10
-        #endpoint1 = tuple([x1, y1])
-        #endpoint1 = tuple(m[0] + e[0]*10)
-        #endpoint1 = tuple(m[0] + k*10)
-
         if endpoint1[0] < x:
             self.end = (endpoint1,(x, y))
         else:
             self.end = ((x, y), endpoint1)
-        #self.end = ((int(endpoint1[0] + x), int(endpoint1[1] + y)), (int(center[0] + x), int(center[1] + y)))
-        #cv2.circle(frame_in,self.end[0],5,(0,255,255),-1)
-        #cv2.circle(frame_in,self.end[1],5,(0,255,255),-1)
-        #print(len(cont))
         for [cnt_pts] in cont:
             self.cnt_pts.append(distant(cnt_pts, pt))
-        #print(self.cnt_pts)
         return frame_in,pt,max_d
 
     def mark_fingers(self, frame_in,hull,pt,radius):
@@ -184,7 +145,6 @@ class hand_tracking():
             cv2.line(frame_in,finger[k],(cx,cy),(0, 0,255),2)
         return frame_in,finger
 def warp(img):
-    #pts1 = np.float32([[115,124],[520,112],[2,476],[640,480]])
     pts1 = np.float32([[206,138],[577,114],[208,355],[596,347]])
     pts2 = np.float32([[0,0],[640,0],[0,480],[640,480]])
     M = cv2.getPerspectiveTransform(pts1,pts2)
@@ -202,9 +162,6 @@ if __name__ == '__main__':
         OK, origin = cap.read()
         if OK:
             ob = hand_tracking(warp(origin), cache(10), cache(10))
-            #print(ob.get_result())
-        # if ob.angle is not None:
-        #     print(ob.angle)
         k = cv2.waitKey(1) & 0xFF # large wait time to remove freezing
         if k == 113 or k == 27:
             break

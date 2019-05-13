@@ -53,14 +53,6 @@ def netsend(msg, flag=-1, need_unpack=True):
         pro_pub.publish(Int32MultiArray(data=a))
     
 def coord_converter(x, y):
-    # pts1 = np.array([[138, 133], [281, 133], [429, 130], [134, 271], [280, 251], [417, 260], [137, 391], [274, 381]])
-    # pts2 = np.array([[0.391, -0.319], [0.557, -0.337], [0.719, -0.355], [0.386, -0.496], [0.557, -0.489], [0.707, -0.470], [0.379, -0.640], [0.541, -0.641]])
-    #pts1 = np.array([[(118, 84), (131, 239), (134, 369), (295, 354), (292, 85), (304, 227), (444, 237), (465, 76)]])
-    #pts2 = np.array([[(0.369, -0.309), (0.399, -0.497), (0.376, -0.646), (0.589, -0.643), (0.568, -0.310), (0.589, -0.495),(0.759, -0.495), (0.792, -0.301)]])
-    # pts1 = np.array([[(68, 57), (76, 217), (78, 345), (271, 220), (274, 358), (274, 147), (433, 338), (440, 232)]])
-    # pts2 = np.array([[(-0.387,-0.238), (-0.341, -0.461), (-0.306, -0.652), (0.011, -0.448), (0.047, -0.637),(-0.013, -0.340),(0.361, -0.603),(0.357, -0.450)]])
-    # pts2 = np.array([[(-0.406, -0.398), (-0.389, -0.544), (-0.371, -0.735), (-0.004, -0.381), (0.017, -0.556), (0.026, -0.720), (0.354, -0.373), (0.372, -0.507), (0.352, -0.674)]])
-    # pts1 = np.array([[49, 124], [61, 231], [71, 360], [274, 117], [283, 235], [287, 352], [474, 105], [466, 202], [473, 325]])
     pts2 = np.array([[(-0.343, -0.242), (-0.342, -0.518), (-0.339, -0.751), (0.040, -0.233), (0.015, -0.501), (0.061, -0.768), (0.437, -0.235), (0.451, -0.522), (0.448, -0.755)]])
     pts1 = np.array([[96, 28], [95, 226], [98, 388], [318, 24], [313, 213], [325, 393], [536, 27],[537, 228],[533, 390]])
     M, mask = cv2.findHomography(pts1, pts2, cv2.RANSAC,5.0)
@@ -107,7 +99,6 @@ class pick_place:
         return dest_m
 
     def move(self, dest_m):
-        #current_m = transformRobotParameter(self.joints_pos_start)
         qsol = self.ik.findClosestIK(dest_m,self.joints_pos_start)
         
         if qsol is not None and not self.cancel:
@@ -119,8 +110,6 @@ class pick_place:
                 JointTrajectoryPoint(positions=self.joints_pos_start.tolist(), velocities=[0]*6, time_from_start=rospy.Duration(0.0)),
                 JointTrajectoryPoint(positions=qsol.tolist(), velocities=[0]*6, time_from_start=rospy.Duration(SPEED)),
             ]
-            #print('start: ' + str(self.joints_pos_start.tolist()))
-            #print('goal: ' + str(qsol.tolist()))
             try:
                 self.client.send_goal(self.goal)
                 self.joints_pos_start = qsol
@@ -142,7 +131,6 @@ class pick_place:
         else:
             position_copy += [0.192]
             position_copy[1] = position_copy[1]
-        # position_copy[1] = position_copy[1] + offset
         position_copy[0] = position_copy[0] + offset1
         pre_position = self.define_grasp([position_copy[0], position_copy[1], position_copy[2] + 0.1])
         post_position = self.define_grasp([position_copy[0], position_copy[1], position_copy[2] + 0.1])
@@ -198,9 +186,6 @@ class pick_place:
 
                 self.client.wait_for_result()
                 netsend([777, 888], need_unpack=False,flag=-99)
-                # rospy.loginfo("go to init because goal canceled")
-                # rest_position = self.define_grasp([0.405, 0.010, 0.342])
-                # self.move(rest_position)
                 break
         rospy.loginfo("let's go and get some rest")
         rest_position = self.define_grasp([0.405, 0.010, 0.342])
@@ -223,8 +208,3 @@ if __name__ == '__main__':
     rospy.init_node('test', anonymous=True)
     task = pick_place()
     rospy.spin()
-    
-    # pick_x, pick_y = coord_converter(419, 219)
-    # place_x, place_y = coord_converter(275, 352)
-    # task.pair_exuete([pick_x, pick_y], [place_x, place_y])
-    #print(coord_converter(449, 103))

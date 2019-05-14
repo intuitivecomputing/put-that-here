@@ -103,8 +103,8 @@ class hand_tracking():
         mat = np.argwhere(sub_thresh != 0)
         mat[:, [0, 1]] = mat[:, [1, 0]]
         mat = np.array(mat).astype(np.float32) #have to convert type for PCA
-        m, e = cv2.PCACompute(mat, mean = np.array([]))
-        center = tuple(m[0])
+#         m, e = cv2.PCACompute(mat, mean = np.array([]))
+#         center = tuple(m[0])
         center = tuple([pt[0], pt[1]])
         rows,cols = frame_in.shape[:2]
         [vx,vy,x,y] = cv2.fitLine(cont, cv2.DIST_L2,0,0.01,0.01)

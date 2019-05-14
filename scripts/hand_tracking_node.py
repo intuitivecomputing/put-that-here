@@ -52,17 +52,6 @@ def camrectify(frame):
         ])
         return cv2.undistort(frame, mtx, dist)
 
-def get_crit(mask):
-    (_,contours, hierarchy)=cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-    max_area = 0
-    crit = None
-    for i , contour in enumerate(contours):
-        area = cv2.contourArea(contour)
-        if area > max_area and hierarchy[0, i, 3] == -1:
-            max_area = area
-            crit = area
-    return crit
-
 def get_objectmask(img):
     hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     green_mask = cv2.inRange(hsv, Green_low, Green_high)
